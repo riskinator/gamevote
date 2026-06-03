@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RISKI Game Vote</title>
+    <meta name="description" content="Vote for the next game to be played on stream!">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo-container">
+            <h1 class="css-logo">
+                <span class="riski">Riski</span><span class="tv">TV</span>
+            </h1>
+        </div>
+        <div class="social-links">
+            <a href="https://www.twitch.tv/RiskiTV" target="_blank" rel="noopener noreferrer" class="social-btn twitch">
+                <i class="fa-brands fa-twitch"></i>
+            </a>
+            <a href="https://www.youtube.com/@Riskinator" target="_blank" rel="noopener noreferrer"
+                class="social-btn youtube">
+                <i class="fa-brands fa-youtube"></i>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Community Game Vote</h1>
+            <p>Welche Games wünscht ihr euch?</p>
+        </section>
+
+        <section class="search-container">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Spiel suchen (z.B. Counter-Strike)..."
+                    autocomplete="off">
+            </div>
+            <select id="sort-select" class="sort-dropdown">
+                <option value="votes">Meist gevotet</option>
+                <option value="az">Alphabetisch (A-Z)</option>
+                <option value="za">Alphabetisch (Z-A)</option>
+            </select>
+        </section>
+
+        <section class="game-list-container">
+            <div id="loading" class="loading">Loading games...</div>
+            <ul id="game-list" class="game-list hidden">
+                <!-- Games will be injected here via JavaScript -->
+            </ul>
+        </section>
+    </main>
+
+    <script src="games_data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
