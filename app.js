@@ -444,10 +444,14 @@ window.toggleVote = function(gameId) {
 // Twitch Status-Check (Lightweight API Abfrage ohne Iframe-Fehler)
 async function checkTwitchStatus() {
     try {
-        const response = await fetch('https://decapi.me/twitch/uptime/RiskiTV?offline_msg=offline');
+        // decapi.me hat keine CORS-Header → über allorigins.win proxyen
+        const twitchUrl = 'https://decapi.me/twitch/uptime/RiskiTV?offline_msg=offline';
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(twitchUrl)}`;
+        const response = await fetch(proxyUrl);
         if (response.ok) {
-            const text = await response.text();
-            const isLive = text.trim().toLowerCase() !== 'offline';
+            const data = await response.json();
+            const text = (data.contents || '').trim().toLowerCase();
+            const isLive = text !== 'offline' && text !== '' && !text.startsWith('error');
             updateStreamStatus(isLive);
         }
     } catch (e) {
