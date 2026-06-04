@@ -291,6 +291,33 @@ function buildUnifiedGameList(steamGames, epicGames, customGames, gamePassGames)
     }));
 }
 
+// 🖼️ Bild-Optimierung: Verkleinerung und Komprimierung für alle CDN- & externen Bilder
+function optimizeImageUrl(url) {
+    if (!url) return 'https://placehold.co/231x87/150a21/a855f7?text=No+Image';
+    
+    // Steam-Bilder sind bereits ab Werk optimal komprimiert (231x87 capsule, ca. 10KB)
+    // placehold.co sind reine Text-Vektorbilder, die sofort laden
+    if (url.includes('steamstatic.com') || url.includes('placehold.co')) {
+        return url;
+    }
+    
+    // Microsoft / Xbox Live CDN Optimierung: Auf 231px Breite skalieren und Qualität komprimieren
+    if (url.includes('store-images.s-microsoft.com') || url.includes('xboxlive.com')) {
+        const cleanUrl = url.split('?')[0]; // Eventuell bestehende Parameter entfernen
+        return `${cleanUrl}?w=231&q=75`;
+    }
+    
+    // Für alle anderen externen Bilder (z.B. aus custom_games.js wie das 1280x720 Tarkov-Bild)
+    // nutzen wir den bewährten, schnellen Image-Proxy weserv.nl, um sie auf 231x87px zu komprimieren.
+    try {
+        const cleanUrl = url.replace(/^https?:\/\//i, '');
+        return `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&w=231&h=87&fit=cover&q=75`;
+    } catch (e) {
+        console.warn("Fehler bei weserv.nl Bild-Optimierung, verwende Original-URL:", e);
+        return url;
+    }
+}
+
 // Render Games List in HTML
 function renderGames() {
     gameListEl.innerHTML = '';
@@ -339,9 +366,11 @@ function renderGames() {
             return '';
         }).join('');
         
+        const optimizedImg = optimizeImageUrl(game.image);
+        
         li.innerHTML = `
             <div class="rank">#${index + 1}</div>
-            <img src="${game.image}" alt="${game.title}" class="game-image" onerror="this.onerror=null; this.src='https://placehold.co/231x87/150a21/a855f7?text=' + encodeURIComponent(this.alt);">
+            <img src="${optimizedImg}" alt="${game.title}" class="game-image" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://placehold.co/231x87/150a21/a855f7?text=' + encodeURIComponent(this.alt);">
             <div class="game-info">
                 <h2 class="game-title">${game.title}</h2>
                 <div class="platform-badges">${sourceBadges}</div>
