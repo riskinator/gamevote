@@ -22,7 +22,7 @@ body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-dark);
     color: var(--text-main);
-    background-image: 
+    background-image:
         radial-gradient(circle at 15% 50%, rgba(126, 34, 206, 0.15) 0%, transparent 50%),
         radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
     min-height: 100vh;
@@ -62,7 +62,7 @@ body {
 
 .css-logo .riski {
     color: #ffffff;
-    text-shadow: 
+    text-shadow:
         0 0 5px #ffffff,
         0 0 10px #ffffff,
         0 0 20px var(--primary-neon),
@@ -72,7 +72,7 @@ body {
 
 .css-logo .tv {
     color: #ff2a9d;
-    text-shadow: 
+    text-shadow:
         0 0 5px #ffffff,
         0 0 10px #ff2a9d,
         0 0 20px #ff2a9d,
@@ -81,18 +81,36 @@ body {
 }
 
 @keyframes floatingLogo {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-5px) scale(1.02); }
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-5px) scale(1.02);
+    }
 }
 
 @keyframes neonFlicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { 
-        opacity: 1; 
-        text-shadow: 0 0 5px #ffffff, 0 0 10px #ff2a9d, 0 0 20px #ff2a9d, 0 0 40px #ff2a9d; 
+
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+        opacity: 1;
+        text-shadow: 0 0 5px #ffffff, 0 0 10px #ff2a9d, 0 0 20px #ff2a9d, 0 0 40px #ff2a9d;
     }
-    20%, 24%, 55% { 
-        opacity: 0.5; 
-        text-shadow: none; 
+
+    20%,
+    24%,
+    55% {
+        opacity: 0.5;
+        text-shadow: none;
     }
 }
 
@@ -125,9 +143,23 @@ body {
     box-shadow: 0 0 15px var(--primary-neon);
 }
 
-.social-btn.twitch:hover { background: #9146FF; border-color: #9146FF; box-shadow: 0 0 15px #9146FF; }
-.social-btn.youtube:hover { background: #FF0000; border-color: #FF0000; box-shadow: 0 0 15px #FF0000; }
-.social-btn.steam:hover { background: #171a21; border-color: #66c0f4; box-shadow: 0 0 15px #66c0f4; }
+.social-btn.twitch:hover {
+    background: #9146FF;
+    border-color: #9146FF;
+    box-shadow: 0 0 15px #9146FF;
+}
+
+.social-btn.youtube:hover {
+    background: #FF0000;
+    border-color: #FF0000;
+    box-shadow: 0 0 15px #FF0000;
+}
+
+.social-btn.steam:hover {
+    background: #171a21;
+    border-color: #66c0f4;
+    box-shadow: 0 0 15px #66c0f4;
+}
 
 .container {
     max-width: 1400px;
@@ -312,7 +344,10 @@ body {
 /* Empty Clip Placeholder */
 .no-clip-placeholder {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -331,8 +366,13 @@ body {
 }
 
 @keyframes blinker {
-    from { opacity: 1; }
-    to { opacity: 0.3; }
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.3;
+    }
 }
 
 /* Responsive sidebars */
@@ -341,19 +381,19 @@ body {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .sidebar {
         width: 100%;
     }
-    
+
     .content-area {
         order: 1;
     }
-    
+
     .twitch-sidebar {
         order: 2;
     }
-    
+
     .youtube-sidebar {
         order: 3;
     }
@@ -366,8 +406,15 @@ body {
 }
 
 @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hero h1 {
@@ -424,7 +471,7 @@ body {
     font-family: inherit;
     outline: none;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 #search-input:focus {
@@ -447,7 +494,7 @@ body {
     font-family: inherit;
     outline: none;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     appearance: none;
     background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a855f7%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
     background-repeat: no-repeat;
@@ -477,9 +524,17 @@ body {
 }
 
 @keyframes pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
+    0% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
 }
 
 .game-list.hidden {
@@ -508,7 +563,10 @@ body {
 .game-item::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: linear-gradient(45deg, transparent, rgba(168, 85, 247, 0.05), transparent);
     transform: translateX(-100%);
     transition: transform 0.6s;
@@ -521,7 +579,7 @@ body {
 .game-item:hover {
     transform: scale(1.02);
     border-color: var(--primary-neon);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.4), 0 0 15px rgba(168, 85, 247, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(168, 85, 247, 0.2);
 }
 
 .rank {
@@ -532,9 +590,18 @@ body {
     text-align: center;
 }
 
-.game-item:nth-child(1) .rank { color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-.game-item:nth-child(2) .rank { color: #c0c0c0; }
-.game-item:nth-child(3) .rank { color: #cd7f32; }
+.game-item:nth-child(1) .rank {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.game-item:nth-child(2) .rank {
+    color: #c0c0c0;
+}
+
+.game-item:nth-child(3) .rank {
+    color: #cd7f32;
+}
 
 .game-image {
     width: 120px;
@@ -542,7 +609,7 @@ body {
     border-radius: 6px;
     object-fit: cover;
     margin: 0 1rem;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .game-info {
@@ -571,7 +638,7 @@ body {
 .vote-btn {
     background: none;
     border: none;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255, 255, 255, 0.3);
     font-size: 1.8rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -589,9 +656,17 @@ body {
 }
 
 @keyframes pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.4); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.4);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 @media (max-width: 600px) {
@@ -601,20 +676,23 @@ body {
         gap: 1rem;
         padding: 1.5rem;
     }
+
     .game-image {
         margin: 0;
         width: 100%;
         height: auto;
         max-width: 231px;
     }
+
     .rank {
         display: none;
     }
+
     .vote-container {
         width: 100%;
         justify-content: center;
         margin-top: 0.5rem;
         padding-top: 1rem;
-        border-top: 1px solid rgba(255,255,255,0.05);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 }

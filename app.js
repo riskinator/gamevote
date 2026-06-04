@@ -256,14 +256,16 @@ function loadSocialEmbeds() {
         }
     }
 
-    // 3. YouTube Neuestes Video / Live Stream (Oben)
+    // 3. YouTube Letzter Livestream (Oben)
     const ytVideoContainer = document.getElementById('youtube-video-container');
     if (ytVideoContainer) {
         const channelId = window.YOUTUBE_CHANNEL_ID || "UCBUNenXpADVmqjmT_bEJeEg";
+        // Umwandlung von Kanal-ID (UC...) zu Live-Streams-Playlist (LV...)
+        // Lädt die Playlist deiner vergangenen Livestreams, beginnend mit dem neuesten
+        const livePlaylistId = channelId.startsWith("UC") ? "LV" + channelId.substring(2) : channelId;
         const iframe = document.createElement('iframe');
-        // Zeigt immer den aktuellen Livestream an, wenn du online bist, andernfalls das Archiv / Offline-Bild
-        iframe.src = `https://www.youtube.com/embed/live?channel=${channelId}`;
-        iframe.title = "YouTube Live Player";
+        iframe.src = `https://www.youtube.com/embed/videoseries?list=${livePlaylistId}`;
+        iframe.title = "YouTube Live Streams Player";
         iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
         iframe.allowFullscreen = true;
         iframe.style.width = "100%";
@@ -276,26 +278,32 @@ function loadSocialEmbeds() {
         ytVideoContainer.appendChild(iframe);
     }
 
-    // 4. YouTube Letzte Uploads (Unten)
+    // 4. YouTube Letzter Short (Unten)
     const ytShortContainer = document.getElementById('youtube-short-container');
     if (ytShortContainer) {
-        const channelId = window.YOUTUBE_CHANNEL_ID || "UCBUNenXpADVmqjmT_bEJeEg";
-        // Automatische Umwandlung von Kanal-ID (UC...) zu Upload-Playlist-ID (UU...)
-        // Dies lädt die Playlist deiner Uploads, beginnend mit dem allerneuesten Video/Short/Stream
-        const playlistId = channelId.startsWith("UC") ? "UU" + channelId.substring(2) : channelId;
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube.com/embed/videoseries?list=${playlistId}`;
-        iframe.title = "YouTube Uploads Player";
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-        iframe.allowFullscreen = true;
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.style.position = "absolute";
-        iframe.style.top = "0";
-        iframe.style.left = "0";
-        iframe.style.border = "none";
-        ytShortContainer.innerHTML = '';
-        ytShortContainer.appendChild(iframe);
+        const shortId = window.YOUTUBE_SHORT_ID;
+        if (!shortId) {
+            ytShortContainer.innerHTML = `
+                <div class="no-clip-placeholder">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Kein Short geladen.<br><small>Trage eine Short-Video-ID in <b>custom_games.js</b> ein!</small></span>
+                </div>
+            `;
+        } else {
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${shortId}`;
+            iframe.title = "YouTube Short Player";
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+            iframe.allowFullscreen = true;
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            iframe.style.position = "absolute";
+            iframe.style.top = "0";
+            iframe.style.left = "0";
+            iframe.style.border = "none";
+            ytShortContainer.innerHTML = '';
+            ytShortContainer.appendChild(iframe);
+        }
     }
 }
 

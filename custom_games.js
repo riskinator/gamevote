@@ -1,5 +1,5 @@
 // ⚙️ SOCIAL MEDIA KONFIGURATION (Hier deine IDs eintragen!)
-window.YOUTUBE_CHANNEL_ID = "UCBUNenXpADVmqjmT_bEJeEg"; // Deine YouTube Kanal-ID (UC...)
+window.YOUTUBE_CHANNEL_ID = "UCxBUB76stDxvjqB_u3bgCzw"; // Deine YouTube Kanal-ID (UC...)
 window.YOUTUBE_SHORT_ID = ""; // ID deines neuesten Shorts (z.B. dQw4w9WgXcQ) - falls leer, wird ein Platzhalter angezeigt
 window.TWITCH_CLIP_SLUG = ""; // Der Name deines Twitch-Clips (aus der Clip-URL) - falls leer, wird ein Platzhalter angezeigt
 
