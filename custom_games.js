@@ -1,6 +1,6 @@
 // ⚙️ SOCIAL MEDIA KONFIGURATION (Hier deine IDs eintragen!)
-window.YOUTUBE_CHANNEL_ID = "UCxBUB76stDxvjqB_u3bgCzw"; // Deine YouTube Kanal-ID (UC...)
-window.TWITCH_CLIP_SLUG = "BraveBoringPonyTakeNRG-9w_jT22m4k_l5n5g"; // Der Name deines Twitch-Clips (aus der Clip-URL)
+window.YOUTUBE_CHANNEL_ID = "UCBUNenXpADVmqjmT_bEJeEg"; // Deine YouTube Kanal-ID (UC...)
+window.TWITCH_CLIP_SLUG = ""; // Der Name deines Twitch-Clips (aus der Clip-URL)
 
 // 🎮 Eigene Spiele (Epic Games, Xbox Game Pass, Tarkov etc.) hinzufügen
 //

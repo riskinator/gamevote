@@ -182,7 +182,39 @@ function loadSocialEmbeds() {
 
     // 1. Twitch Live Stream
     const twitchContainer = document.getElementById('twitch-embed-container');
-    if (twitchContainer) {
+    if (twitchContainer && typeof Twitch !== 'undefined' && Twitch.Player) {
+        twitchContainer.innerHTML = ''; // Container leeren
+        
+        // Twitch Player initialisieren
+        const player = new Twitch.Player("twitch-embed-container", {
+            width: "100%",
+            height: "100%",
+            channel: "RiskiTV",
+            parent: [hostname],
+            muted: true,
+            autoplay: false
+        });
+
+        // Event-Listeners für Online/Offline Status des Streamers
+        player.addEventListener(Twitch.Player.ONLINE, () => {
+            const badge = document.querySelector('.twitch-sidebar .live-badge');
+            if (badge) {
+                badge.innerHTML = '<span class="live-dot"></span>LIVE';
+                badge.classList.remove('offline');
+                badge.classList.add('live');
+            }
+        });
+
+        player.addEventListener(Twitch.Player.OFFLINE, () => {
+            const badge = document.querySelector('.twitch-sidebar .live-badge');
+            if (badge) {
+                badge.innerHTML = 'OFFLINE';
+                badge.classList.remove('live');
+                badge.classList.add('offline');
+            }
+        });
+    } else if (twitchContainer) {
+        // Fallback falls das Twitch SDK blockiert wird / nicht lädt
         const iframe = document.createElement('iframe');
         iframe.src = `https://player.twitch.tv/?channel=RiskiTV&parent=${hostname}&muted=true&autoplay=false`;
         iframe.title = "Twitch Live Player";
@@ -200,25 +232,34 @@ function loadSocialEmbeds() {
     // 2. Twitch Clip
     const clipContainer = document.getElementById('twitch-clip-container');
     if (clipContainer) {
-        const clipSlug = window.TWITCH_CLIP_SLUG || "BraveBoringPonyTakeNRG-9w_jT22m4k_l5n5g";
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://clips.twitch.tv/embed?clip=${clipSlug}&parent=${hostname}&autoplay=false`;
-        iframe.title = "Twitch Clip Player";
-        iframe.allowFullscreen = true;
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.style.position = "absolute";
-        iframe.style.top = "0";
-        iframe.style.left = "0";
-        iframe.style.border = "none";
-        clipContainer.innerHTML = '';
-        clipContainer.appendChild(iframe);
+        const clipSlug = window.TWITCH_CLIP_SLUG;
+        if (!clipSlug) {
+            clipContainer.innerHTML = `
+                <div class="no-clip-placeholder">
+                    <i class="fa-solid fa-film"></i>
+                    <span>Kein Clip geladen.<br><small>Trage einen Clip-Slug in <b>custom_games.js</b> ein!</small></span>
+                </div>
+            `;
+        } else {
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://clips.twitch.tv/embed?clip=${clipSlug}&parent=${hostname}&autoplay=false`;
+            iframe.title = "Twitch Clip Player";
+            iframe.allowFullscreen = true;
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            iframe.style.position = "absolute";
+            iframe.style.top = "0";
+            iframe.style.left = "0";
+            iframe.style.border = "none";
+            clipContainer.innerHTML = '';
+            clipContainer.appendChild(iframe);
+        }
     }
 
     // 3. YouTube Neuestes Video / Live Stream (Oben)
     const ytVideoContainer = document.getElementById('youtube-video-container');
     if (ytVideoContainer) {
-        const channelId = window.YOUTUBE_CHANNEL_ID || "UCxBUB76stDxvjqB_u3bgCzw";
+        const channelId = window.YOUTUBE_CHANNEL_ID || "UCBUNenXpADVmqjmT_bEJeEg";
         const iframe = document.createElement('iframe');
         // Zeigt immer den aktuellen Livestream an, wenn du online bist, andernfalls das Archiv / Offline-Bild
         iframe.src = `https://www.youtube.com/embed/live?channel=${channelId}`;
@@ -238,7 +279,7 @@ function loadSocialEmbeds() {
     // 4. YouTube Letzte Uploads (Unten)
     const ytShortContainer = document.getElementById('youtube-short-container');
     if (ytShortContainer) {
-        const channelId = window.YOUTUBE_CHANNEL_ID || "UCxBUB76stDxvjqB_u3bgCzw";
+        const channelId = window.YOUTUBE_CHANNEL_ID || "UCBUNenXpADVmqjmT_bEJeEg";
         // Automatische Umwandlung von Kanal-ID (UC...) zu Upload-Playlist-ID (UU...)
         // Dies lädt die Playlist deiner Uploads, beginnend mit dem allerneuesten Video/Short/Stream
         const playlistId = channelId.startsWith("UC") ? "UU" + channelId.substring(2) : channelId;
