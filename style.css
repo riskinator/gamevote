@@ -62,11 +62,6 @@ body {
     flex-wrap: wrap;
 }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 .css-logo {
     font-size: 3rem;
@@ -190,7 +185,9 @@ body {
 /* Logo and Stream Status alignment */
 .logo-container {
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
     gap: 1.5rem;
 }
 
@@ -599,43 +596,52 @@ body {
         transform: scale(1);
     }
 }
-/* Mobile Navbar: Vertikal stapeln damit Social-Icons das Badge nicht überdecken */
+/* =====================================================
+   MOBILE NAVBAR (max 768px)
+   Reihenfolge: Logo → Badge → Social Icons → Suche → Sort
+   ===================================================== */
 @media (max-width: 768px) {
     .navbar {
         padding: 0.75rem 1rem 1rem;
-    }
-
-    /* Obere Zeile: Logo + Badge oben, Social Icons darunter */
-    .navbar-top {
-        flex-direction: column;
         gap: 0.5rem;
     }
 
-    .logo-container {
-        flex-direction: column;
+    /* Obere Zeile: Logo+Badge oben, Social-Icons darunter (column) */
+    .navbar-top {
+        flex-direction: column !important;
         align-items: center;
-        gap: 0.4rem;
+        gap: 0.5rem;
     }
 
+    /* Logo + Badge nebeneinander → untereinander */
+    .logo-container {
+        flex-direction: column !important;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    /* Social Icons: aus absolute-Positionierung herausnehmen */
     .social-links {
-        position: static;
+        position: static !important;
         justify-content: center;
     }
 
-    /* Suchzeile: alles untereinander */
+    /* Suchleiste + Dropdown: untereinander, zentriert */
     .navbar-search {
         flex-direction: column;
         align-items: center;
         gap: 6px;
-    }
-
-    .search-wrapper {
-        max-width: 100%;
         width: 100%;
     }
 
+    .search-wrapper {
+        max-width: 100% !important;
+        width: 100% !important;
+        flex: none !important; /* Verhindert dass flex:1 1 300px die Höhe auf 300px setzt */
+    }
+
     .custom-dropdown {
-        width: 220px;
+        width: 220px !important;
     }
 }
 
