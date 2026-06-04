@@ -304,8 +304,8 @@ body {
 }
 
 /* Search Bar & Sort (in Navbar) */
-.navbar-search .search-wrapper {
-    position: relative;
+.search-wrapper {
+    position: relative; /* Immer relativ, damit Icon korrekt positioniert wird */
     width: 100%;
     max-width: 500px;
     flex: 1 1 300px;
@@ -602,13 +602,19 @@ body {
 /* Mobile Navbar: Vertikal stapeln damit Social-Icons das Badge nicht überdecken */
 @media (max-width: 768px) {
     .navbar {
-        padding: 0.75rem 1rem;
+        padding: 0.75rem 1rem 1rem;
+    }
+
+    /* Obere Zeile: Logo + Badge oben, Social Icons darunter */
+    .navbar-top {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
     .logo-container {
         flex-direction: column;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.4rem;
     }
 
     .social-links {
@@ -616,13 +622,14 @@ body {
         justify-content: center;
     }
 
+    /* Suchzeile: alles untereinander */
     .navbar-search {
         flex-direction: column;
         align-items: center;
         gap: 6px;
     }
 
-    .navbar-search .search-wrapper {
+    .search-wrapper {
         max-width: 100%;
         width: 100%;
     }
