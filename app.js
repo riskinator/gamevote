@@ -133,6 +133,15 @@ window.toggleVote = function(gameId) {
     const isVoted = votedGames[gameId] === true;
     const gameVoteRef = db.ref(`votes/${gameId}`);
 
+    // Optimistische Aktualisierung im Client für sofortiges Feedback
+    if (isVoted) {
+        delete votedGames[gameId];
+    } else {
+        votedGames[gameId] = true;
+    }
+    localStorage.setItem(VOTED_KEY, JSON.stringify(votedGames));
+    renderGames(); // Sofort neu rendern, damit das Herz direkt rot/gefüllt wird
+
     // Atomically increment or decrement the vote count in Firebase Realtime Database
     gameVoteRef.transaction((currentVotes) => {
         if (isVoted) {
@@ -146,15 +155,14 @@ window.toggleVote = function(gameId) {
     }, (error, committed, snapshot) => {
         if (error) {
             console.error("Fehler beim Abstimmen:", error);
-        } else if (committed) {
-            // Toggle client-side voted list after successful write operation
+            // Bei Fehler: Optimistisches Update zurückrollen
             if (isVoted) {
-                delete votedGames[gameId];
-            } else {
                 votedGames[gameId] = true;
+            } else {
+                delete votedGames[gameId];
             }
             localStorage.setItem(VOTED_KEY, JSON.stringify(votedGames));
-            // renderGames is triggered automatically by the 'value' database listener!
+            renderGames();
         }
     });
 };
