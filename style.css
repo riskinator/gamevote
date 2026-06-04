@@ -128,9 +128,201 @@ body {
 .social-btn.steam:hover { background: #171a21; border-color: #66c0f4; box-shadow: 0 0 15px #66c0f4; }
 
 .container {
-    max-width: 800px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 2rem 1rem;
+}
+
+.main-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-top: 1rem;
+}
+
+.content-area {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Sidebars */
+.sidebar {
+    width: 320px;
+    flex-shrink: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.05);
+    transition: all 0.3s ease;
+}
+
+.sidebar:hover {
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(168, 85, 247, 0.1);
+}
+
+.sidebar-header {
+    padding: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 800;
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--glass-border);
+    letter-spacing: 0.5px;
+}
+
+.sidebar-header .header-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.twitch-header {
+    background: linear-gradient(135deg, rgba(145, 70, 255, 0.15) 0%, transparent 100%);
+    color: #a970ff;
+}
+
+.youtube-header {
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, transparent 100%);
+    color: #ff4a4a;
+}
+
+.sidebar-content {
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.section-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Aspect-ratio Wrapper for 16:9 videos */
+.embed-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #000;
+}
+
+.embed-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Buttons inside sidebars */
+.sidebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.8rem;
+    border-radius: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.twitch-btn {
+    background: rgba(145, 70, 255, 0.1);
+    border: 1px solid rgba(145, 70, 255, 0.4);
+    color: #a970ff;
+}
+
+.twitch-btn:hover {
+    background: #9146FF;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(145, 70, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.youtube-btn {
+    background: rgba(255, 0, 0, 0.08);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    color: #ff4a4a;
+}
+
+.youtube-btn:hover {
+    background: #FF0000;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+    transform: translateY(-2px);
+}
+
+/* LIVE indicator badge */
+.live-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.live-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #ef4444;
+    border-radius: 50%;
+    display: inline-block;
+    animation: blinker 1.5s cubic-bezier(0.5, 0, 1, 1) infinite alternate;
+}
+
+@keyframes blinker {
+    from { opacity: 1; }
+    to { opacity: 0.3; }
+}
+
+/* Responsive sidebars */
+@media (max-width: 1200px) {
+    .main-layout {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .sidebar {
+        width: 100%;
+    }
+    
+    .content-area {
+        order: 1;
+    }
+    
+    .twitch-sidebar {
+        order: 2;
+    }
+    
+    .youtube-sidebar {
+        order: 3;
+    }
 }
 
 .hero {

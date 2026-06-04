@@ -16,13 +16,22 @@ const db = firebase.database();
 // Local Storage key for voter status (tracks which games this user has voted for)
 const VOTED_KEY = 'riski_voted_games';
 
-// Load base games from games_data.js
+// Load base games from games_data.js and custom_games.js
 const rawGames = window.IMPORTED_GAMES || [];
-const baseGames = rawGames.map(g => ({
-    id: g.appid.toString(),
-    title: g.name,
-    image: `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${g.appid}/capsule_231x87.jpg`
-}));
+const customGames = window.CUSTOM_GAMES || [];
+
+const baseGames = [
+    ...rawGames.map(g => ({
+        id: g.appid.toString(),
+        title: g.name,
+        image: g.image || `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${g.appid}/capsule_231x87.jpg`
+    })),
+    ...customGames.map(g => ({
+        id: g.appid.toString(),
+        title: g.name,
+        image: g.image || `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${g.appid}/capsule_231x87.jpg`
+    }))
+];
 
 // State variables
 let games = baseGames.map(game => ({ ...game, votes: 0 }));
@@ -95,7 +104,7 @@ function renderGames() {
         
         li.innerHTML = `
             <div class="rank">#${index + 1}</div>
-            <img src="${game.image}" alt="${game.title}" class="game-image" onerror="this.src='https://via.placeholder.com/231x87/150a21/a855f7?text=No+Image'">
+            <img src="${game.image}" alt="${game.title}" class="game-image" onerror="this.onerror=null; this.src='https://placehold.co/231x87/150a21/a855f7?text=' + encodeURIComponent(this.alt);">
             <div class="game-info">
                 <h2 class="game-title">${game.title}</h2>
             </div>
@@ -166,3 +175,88 @@ window.toggleVote = function(gameId) {
         }
     });
 };
+
+// Dynamisch die Twitch- und YouTube-Embeds laden
+function loadSocialEmbeds() {
+    const hostname = window.location.hostname || "localhost";
+
+    // 1. Twitch Live Stream
+    const twitchContainer = document.getElementById('twitch-embed-container');
+    if (twitchContainer) {
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://player.twitch.tv/?channel=RiskiTV&parent=${hostname}&muted=true&autoplay=false`;
+        iframe.title = "Twitch Live Player";
+        iframe.allowFullscreen = true;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.position = "absolute";
+        iframe.style.top = "0";
+        iframe.style.left = "0";
+        iframe.style.border = "none";
+        twitchContainer.innerHTML = '';
+        twitchContainer.appendChild(iframe);
+    }
+
+    // 2. Twitch Clip
+    const clipContainer = document.getElementById('twitch-clip-container');
+    if (clipContainer) {
+        const clipSlug = window.TWITCH_CLIP_SLUG || "BraveBoringPonyTakeNRG-9w_jT22m4k_l5n5g";
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://clips.twitch.tv/embed?clip=${clipSlug}&parent=${hostname}&autoplay=false`;
+        iframe.title = "Twitch Clip Player";
+        iframe.allowFullscreen = true;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.position = "absolute";
+        iframe.style.top = "0";
+        iframe.style.left = "0";
+        iframe.style.border = "none";
+        clipContainer.innerHTML = '';
+        clipContainer.appendChild(iframe);
+    }
+
+    // 3. YouTube Neuestes Video / Live Stream (Oben)
+    const ytVideoContainer = document.getElementById('youtube-video-container');
+    if (ytVideoContainer) {
+        const channelId = window.YOUTUBE_CHANNEL_ID || "UCxBUB76stDxvjqB_u3bgCzw";
+        const iframe = document.createElement('iframe');
+        // Zeigt immer den aktuellen Livestream an, wenn du online bist, andernfalls das Archiv / Offline-Bild
+        iframe.src = `https://www.youtube.com/embed/live?channel=${channelId}`;
+        iframe.title = "YouTube Live Player";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.position = "absolute";
+        iframe.style.top = "0";
+        iframe.style.left = "0";
+        iframe.style.border = "none";
+        ytVideoContainer.innerHTML = '';
+        ytVideoContainer.appendChild(iframe);
+    }
+
+    // 4. YouTube Letzte Uploads (Unten)
+    const ytShortContainer = document.getElementById('youtube-short-container');
+    if (ytShortContainer) {
+        const channelId = window.YOUTUBE_CHANNEL_ID || "UCxBUB76stDxvjqB_u3bgCzw";
+        // Automatische Umwandlung von Kanal-ID (UC...) zu Upload-Playlist-ID (UU...)
+        // Dies lädt die Playlist deiner Uploads, beginnend mit dem allerneuesten Video/Short/Stream
+        const playlistId = channelId.startsWith("UC") ? "UU" + channelId.substring(2) : channelId;
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/videoseries?list=${playlistId}`;
+        iframe.title = "YouTube Uploads Player";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.position = "absolute";
+        iframe.style.top = "0";
+        iframe.style.left = "0";
+        iframe.style.border = "none";
+        ytShortContainer.innerHTML = '';
+        ytShortContainer.appendChild(iframe);
+    }
+}
+
+// Direkt ausführen, da app.js am Ende des Bodys geladen wird
+loadSocialEmbeds();

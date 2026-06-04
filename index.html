@@ -35,28 +35,89 @@
             <p>Welche Games wünscht ihr euch?</p>
         </section>
 
-        <section class="search-container">
-            <div class="search-wrapper">
-                <i class="fa-solid fa-search search-icon"></i>
-                <input type="text" id="search-input" placeholder="Spiel suchen (z.B. Counter-Strike)..."
-                    autocomplete="off">
-            </div>
-            <select id="sort-select" class="sort-dropdown">
-                <option value="votes">Meist gevotet</option>
-                <option value="az">Alphabetisch (A-Z)</option>
-                <option value="za">Alphabetisch (Z-A)</option>
-            </select>
-        </section>
+        <div class="main-layout">
+            <!-- Linker Sidebar: Twitch (Stream & Clip) -->
+            <aside class="sidebar twitch-sidebar">
+                <div class="sidebar-header twitch-header">
+                    <div class="header-title">
+                        <i class="fa-brands fa-twitch"></i>
+                        <span>Twitch Channel</span>
+                    </div>
+                    <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+                </div>
+                <div class="sidebar-content">
+                    <div class="sidebar-section">
+                        <h3 class="section-title">Live Stream</h3>
+                        <div id="twitch-embed-container" class="embed-wrapper">
+                            <!-- Wird dynamisch in app.js geladen -->
+                        </div>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3 class="section-title">Letzter Clip</h3>
+                        <div id="twitch-clip-container" class="embed-wrapper">
+                            <!-- Wird dynamisch in app.js geladen -->
+                        </div>
+                    </div>
+                    <a href="https://www.twitch.tv/RiskiTV" target="_blank" rel="noopener noreferrer" class="sidebar-btn twitch-btn">
+                        <i class="fa-brands fa-twitch"></i> Kanal besuchen
+                    </a>
+                </div>
+            </aside>
 
-        <section class="game-list-container">
-            <div id="loading" class="loading">Loading games...</div>
-            <ul id="game-list" class="game-list hidden">
-                <!-- Games will be injected here via JavaScript -->
-            </ul>
-        </section>
+            <!-- Mittlerer Inhalt: Game-Vote Liste -->
+            <div class="content-area">
+                <section class="search-container">
+                    <div class="search-wrapper">
+                        <i class="fa-solid fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Spiel suchen (z.B. Counter-Strike)..."
+                            autocomplete="off">
+                    </div>
+                    <select id="sort-select" class="sort-dropdown">
+                        <option value="votes">Meist gevotet</option>
+                        <option value="az">Alphabetisch (A-Z)</option>
+                        <option value="za">Alphabetisch (Z-A)</option>
+                    </select>
+                </section>
+
+                <section class="game-list-container">
+                    <div id="loading" class="loading">Loading games...</div>
+                    <ul id="game-list" class="game-list hidden">
+                        <!-- Games will be injected here via JavaScript -->
+                    </ul>
+                </section>
+            </div>
+
+            <!-- Rechter Sidebar: YouTube (Video & Short) -->
+            <aside class="sidebar youtube-sidebar">
+                <div class="sidebar-header youtube-header">
+                    <div class="header-title">
+                        <i class="fa-brands fa-youtube"></i>
+                        <span>YouTube Videos</span>
+                    </div>
+                </div>
+                <div class="sidebar-content">
+                    <div class="sidebar-section">
+                        <h3 class="section-title">Neuestes Video</h3>
+                        <div id="youtube-video-container" class="embed-wrapper">
+                            <!-- Wird dynamisch in app.js geladen -->
+                        </div>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3 class="section-title">Letzter Short</h3>
+                        <div id="youtube-short-container" class="embed-wrapper">
+                            <!-- Wird dynamisch in app.js geladen -->
+                        </div>
+                    </div>
+                    <a href="https://www.youtube.com/@Riskinator" target="_blank" rel="noopener noreferrer" class="sidebar-btn youtube-btn">
+                        <i class="fa-brands fa-youtube"></i> Kanal abonnieren
+                    </a>
+                </div>
+            </aside>
+        </div>
     </main>
 
     <script src="games_data.js"></script>
+    <script src="custom_games.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="app.js"></script>
