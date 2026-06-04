@@ -162,240 +162,72 @@ body {
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 2rem 1rem;
 }
 
-.main-layout {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-    margin-top: 1rem;
-}
-
-.content-area {
-    flex: 1;
-    min-width: 0;
-}
-
-/* Sidebars */
-.sidebar {
-    width: 320px;
-    flex-shrink: 0;
-    background: var(--bg-card);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.05);
-    transition: all 0.3s ease;
-}
-
-.sidebar:hover {
-    border-color: rgba(168, 85, 247, 0.4);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(168, 85, 247, 0.1);
-}
-
-.sidebar-header {
-    padding: 1.2rem;
+/* Logo and Stream Status alignment */
+.logo-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    font-weight: 800;
-    font-size: 1.1rem;
-    border-bottom: 1px solid var(--glass-border);
-    letter-spacing: 0.5px;
-}
-
-.sidebar-header .header-title {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
-
-.twitch-header {
-    background: linear-gradient(135deg, rgba(145, 70, 255, 0.15) 0%, transparent 100%);
-    color: #a970ff;
-}
-
-.youtube-header {
-    background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, transparent 100%);
-    color: #ff4a4a;
-}
-
-.sidebar-content {
-    padding: 1.2rem;
-    display: flex;
-    flex-direction: column;
     gap: 1.5rem;
 }
 
-.sidebar-section {
+/* Stream Status Badge */
+.stream-status-badge {
     display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.section-title {
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Aspect-ratio Wrapper for 16:9 videos */
-.embed-wrapper {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%;
-    height: 0;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background: #000;
-}
-
-.embed-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-/* Buttons inside sidebars */
-.sidebar-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: 0.8rem;
-    border-radius: 30px;
-    font-weight: 600;
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.twitch-btn {
-    background: rgba(145, 70, 255, 0.1);
-    border: 1px solid rgba(145, 70, 255, 0.4);
-    color: #a970ff;
-}
-
-.twitch-btn:hover {
-    background: #9146FF;
-    color: #fff;
-    box-shadow: 0 0 15px rgba(145, 70, 255, 0.4);
-    transform: translateY(-2px);
-}
-
-.youtube-btn {
-    background: rgba(255, 0, 0, 0.08);
-    border: 1px solid rgba(255, 0, 0, 0.3);
-    color: #ff4a4a;
-}
-
-.youtube-btn:hover {
-    background: #FF0000;
-    color: #fff;
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-    transform: translateY(-2px);
-}
-
-/* LIVE indicator badge */
-.live-badge {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-}
-
-.live-badge.live {
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    color: #ef4444;
-}
-
-.live-badge.offline {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.4);
     letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    user-select: none;
 }
 
-.live-dot {
-    width: 6px;
-    height: 6px;
-    background-color: #ef4444;
+.stream-status-badge.live {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+}
+
+.stream-status-badge.offline {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     display: inline-block;
-    animation: blinker 1.5s cubic-bezier(0.5, 0, 1, 1) infinite alternate;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
 }
 
-/* Empty Clip Placeholder */
-.no-clip-placeholder {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    background: rgba(255, 255, 255, 0.02);
+.stream-status-badge.live .status-dot {
+    background-color: #ef4444;
+    box-shadow: 0 0 8px #ef4444;
+    animation: statusBlink 1.5s cubic-bezier(0.5, 0, 1, 1) infinite alternate;
 }
 
-.no-clip-placeholder i {
-    font-size: 1.5rem;
-    color: var(--primary-neon);
-}
-
-@keyframes blinker {
+@keyframes statusBlink {
     from {
         opacity: 1;
+        transform: scale(1);
     }
-
     to {
-        opacity: 0.3;
-    }
-}
-
-/* Responsive sidebars */
-@media (max-width: 1200px) {
-    .main-layout {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .sidebar {
-        width: 100%;
-    }
-
-    .content-area {
-        order: 1;
-    }
-
-    .twitch-sidebar {
-        order: 2;
-    }
-
-    .youtube-sidebar {
-        order: 3;
+        opacity: 0.4;
+        transform: scale(0.9);
     }
 }
 

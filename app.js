@@ -176,17 +176,24 @@ window.toggleVote = function(gameId) {
     });
 };
 
-// Dynamisch die Twitch- und YouTube-Embeds laden
-function loadSocialEmbeds() {
+// Twitch Status-Check initialisieren
+function initTwitchStatusCheck() {
     const hostname = window.location.hostname || "localhost";
 
-    // 1. Twitch Live Stream
-    const twitchContainer = document.getElementById('twitch-embed-container');
-    if (twitchContainer && typeof Twitch !== 'undefined' && Twitch.Player) {
-        twitchContainer.innerHTML = ''; // Container leeren
-        
-        // Twitch Player initialisieren
-        const player = new Twitch.Player("twitch-embed-container", {
+    // Ein unsichtbares Div für den Twitch-Player erstellen, um dessen Status-Events zu nutzen
+    const hiddenDiv = document.createElement('div');
+    hiddenDiv.id = 'hidden-twitch-player';
+    hiddenDiv.style.position = 'absolute';
+    hiddenDiv.style.width = '1px';
+    hiddenDiv.style.height = '1px';
+    hiddenDiv.style.opacity = '0.01';
+    hiddenDiv.style.left = '-9999px';
+    hiddenDiv.style.pointerEvents = 'none';
+    document.body.appendChild(hiddenDiv);
+
+    if (typeof Twitch !== 'undefined' && Twitch.Player) {
+        // Twitch Player initialisieren (unsichtbar)
+        const player = new Twitch.Player("hidden-twitch-player", {
             width: "100%",
             height: "100%",
             channel: "RiskiTV",
@@ -197,115 +204,31 @@ function loadSocialEmbeds() {
 
         // Event-Listeners für Online/Offline Status des Streamers
         player.addEventListener(Twitch.Player.ONLINE, () => {
-            const badge = document.querySelector('.twitch-sidebar .live-badge');
-            if (badge) {
-                badge.innerHTML = '<span class="live-dot"></span>LIVE';
-                badge.classList.remove('offline');
-                badge.classList.add('live');
-            }
+            updateStreamStatus(true);
         });
 
         player.addEventListener(Twitch.Player.OFFLINE, () => {
-            const badge = document.querySelector('.twitch-sidebar .live-badge');
-            if (badge) {
-                badge.innerHTML = 'OFFLINE';
-                badge.classList.remove('live');
-                badge.classList.add('offline');
-            }
+            updateStreamStatus(false);
         });
-    } else if (twitchContainer) {
-        // Fallback falls das Twitch SDK blockiert wird / nicht lädt
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://player.twitch.tv/?channel=RiskiTV&parent=${hostname}&muted=true&autoplay=false`;
-        iframe.title = "Twitch Live Player";
-        iframe.allowFullscreen = true;
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.style.position = "absolute";
-        iframe.style.top = "0";
-        iframe.style.left = "0";
-        iframe.style.border = "none";
-        twitchContainer.innerHTML = '';
-        twitchContainer.appendChild(iframe);
-    }
-
-    // 2. Twitch Clip
-    const clipContainer = document.getElementById('twitch-clip-container');
-    if (clipContainer) {
-        const clipSlug = window.TWITCH_CLIP_SLUG;
-        if (!clipSlug) {
-            clipContainer.innerHTML = `
-                <div class="no-clip-placeholder">
-                    <i class="fa-solid fa-film"></i>
-                    <span>Kein Clip geladen.<br><small>Trage einen Clip-Slug in <b>custom_games.js</b> ein!</small></span>
-                </div>
-            `;
-        } else {
-            const iframe = document.createElement('iframe');
-            iframe.src = `https://clips.twitch.tv/embed?clip=${clipSlug}&parent=${hostname}&autoplay=false`;
-            iframe.title = "Twitch Clip Player";
-            iframe.allowFullscreen = true;
-            iframe.style.width = "100%";
-            iframe.style.height = "100%";
-            iframe.style.position = "absolute";
-            iframe.style.top = "0";
-            iframe.style.left = "0";
-            iframe.style.border = "none";
-            clipContainer.innerHTML = '';
-            clipContainer.appendChild(iframe);
-        }
-    }
-
-    // 3. YouTube Letzter Livestream (Oben)
-    const ytVideoContainer = document.getElementById('youtube-video-container');
-    if (ytVideoContainer) {
-        const channelId = window.YOUTUBE_CHANNEL_ID || "UCBUNenXpADVmqjmT_bEJeEg";
-        // Umwandlung von Kanal-ID (UC...) zu Live-Streams-Playlist (LV...)
-        // Lädt die Playlist deiner vergangenen Livestreams, beginnend mit dem neuesten
-        const livePlaylistId = channelId.startsWith("UC") ? "LV" + channelId.substring(2) : channelId;
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube.com/embed/videoseries?list=${livePlaylistId}`;
-        iframe.title = "YouTube Live Streams Player";
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-        iframe.allowFullscreen = true;
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.style.position = "absolute";
-        iframe.style.top = "0";
-        iframe.style.left = "0";
-        iframe.style.border = "none";
-        ytVideoContainer.innerHTML = '';
-        ytVideoContainer.appendChild(iframe);
-    }
-
-    // 4. YouTube Letzter Short (Unten)
-    const ytShortContainer = document.getElementById('youtube-short-container');
-    if (ytShortContainer) {
-        const shortId = window.YOUTUBE_SHORT_ID;
-        if (!shortId) {
-            ytShortContainer.innerHTML = `
-                <div class="no-clip-placeholder">
-                    <i class="fa-solid fa-play"></i>
-                    <span>Kein Short geladen.<br><small>Trage eine Short-Video-ID in <b>custom_games.js</b> ein!</small></span>
-                </div>
-            `;
-        } else {
-            const iframe = document.createElement('iframe');
-            iframe.src = `https://www.youtube.com/embed/${shortId}`;
-            iframe.title = "YouTube Short Player";
-            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-            iframe.allowFullscreen = true;
-            iframe.style.width = "100%";
-            iframe.style.height = "100%";
-            iframe.style.position = "absolute";
-            iframe.style.top = "0";
-            iframe.style.left = "0";
-            iframe.style.border = "none";
-            ytShortContainer.innerHTML = '';
-            ytShortContainer.appendChild(iframe);
-        }
     }
 }
 
-// Direkt ausführen, da app.js am Ende des Bodys geladen wird
-loadSocialEmbeds();
+// Stream-Status-Anzeige in der Navbar aktualisieren
+function updateStreamStatus(isLive) {
+    const badge = document.getElementById('stream-status');
+    if (!badge) return;
+    const textEl = badge.querySelector('.status-text');
+    
+    if (isLive) {
+        badge.classList.remove('offline');
+        badge.classList.add('live');
+        if (textEl) textEl.textContent = 'Stream: LIVE';
+    } else {
+        badge.classList.remove('live');
+        badge.classList.add('offline');
+        if (textEl) textEl.textContent = 'Stream: OFFLINE';
+    }
+}
+
+// Twitch-Statusprüfung starten
+initTwitchStatusCheck();
