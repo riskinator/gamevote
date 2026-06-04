@@ -441,22 +441,53 @@ window.toggleVote = function(gameId) {
     });
 };
 
-// Twitch Status-Check (Lightweight API Abfrage ohne Iframe-Fehler)
+// Twitch Status-Check — Multi-Strategy mit Cache-Busting & Fallbacks
 async function checkTwitchStatus() {
-    try {
-        // decapi.me hat keine CORS-Header → über allorigins.win proxyen
-        const twitchUrl = 'https://decapi.me/twitch/uptime/RiskiTV?offline_msg=offline';
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(twitchUrl)}`;
-        const response = await fetch(proxyUrl);
-        if (response.ok) {
-            const data = await response.json();
-            const text = (data.contents || '').trim().toLowerCase();
-            const isLive = text !== 'offline' && text !== '' && !text.startsWith('error');
-            updateStreamStatus(isLive);
-        }
-    } catch (e) {
-        console.warn("Fehler beim Abrufen des Twitch-Status:", e);
+    const CHANNEL = 'RiskiTV';
+    
+    // Cache-Busting: Timestamp verhindert dass Proxies veraltete "offline"-Antworten liefern
+    const ts = Date.now();
+    const twitchUrl = `https://decapi.me/twitch/uptime/${CHANNEL}?offline_msg=offline&_=${ts}`;
+    
+    function parseIsLive(text) {
+        if (!text) return false;
+        const t = text.trim().toLowerCase();
+        // Live = Antwort ist eine Zeitangabe (z.B. "8 minutes, 2 seconds"), nicht "offline"
+        return t !== 'offline' && t !== '' && !t.includes('error') && t.length > 3;
     }
+    
+    // Strategie 1: Direkter Fetch (klappt wenn decapi.me CORS-Header hat)
+    try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 4000);
+        const r = await fetch(twitchUrl, { signal: controller.signal });
+        clearTimeout(timeout);
+        if (r.ok) {
+            updateStreamStatus(parseIsLive(await r.text()));
+            return;
+        }
+    } catch (e) { /* weiter zu Fallback */ }
+    
+    // Strategie 2: allorigins.win Proxy (mit Cache-Busting)
+    try {
+        const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(twitchUrl)}`);
+        if (r.ok) {
+            const data = await r.json();
+            updateStreamStatus(parseIsLive(data.contents));
+            return;
+        }
+    } catch (e) { /* weiter zu Fallback */ }
+    
+    // Strategie 3: corsproxy.io (zweiter Fallback)
+    try {
+        const r = await fetch(`https://corsproxy.io/?${encodeURIComponent(twitchUrl)}`);
+        if (r.ok) {
+            updateStreamStatus(parseIsLive(await r.text()));
+            return;
+        }
+    } catch (e) { /* alle Strategien fehlgeschlagen */ }
+    
+    console.warn("Twitch-Status konnte über keinen Weg abgerufen werden.");
 }
 
 // Twitch Status-Check initialisieren
