@@ -273,6 +273,8 @@ body {
     animation: slideDown 0.8s ease-out 0.2s forwards;
     opacity: 0;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 10;
 }
 
 .search-wrapper {
@@ -316,32 +318,95 @@ body {
     color: rgba(255, 255, 255, 0.3);
 }
 
-.sort-dropdown {
-    padding: 1rem 2rem 1rem 1.5rem;
+/* Custom Dropdown Styling */
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 220px;
+    font-family: inherit;
+    z-index: 95;
+}
+
+.dropdown-trigger {
+    width: 100%;
+    padding: 1rem 1.5rem;
     background: var(--surface);
     border: 1px solid rgba(168, 85, 247, 0.3);
     border-radius: 30px;
     color: var(--text-light);
     font-size: 1.1rem;
     font-family: inherit;
-    outline: none;
     cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    outline: none;
+    transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a855f7%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem top 50%;
-    background-size: 0.65rem auto;
 }
 
-.sort-dropdown:focus {
+.dropdown-trigger:hover,
+.dropdown-trigger:focus {
     border-color: var(--primary-neon);
     box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    background: rgba(21, 10, 33, 0.9);
 }
 
-.sort-dropdown option {
-    background: var(--surface);
+.dropdown-arrow {
+    color: var(--primary-neon);
+    font-size: 0.85rem;
+    transition: transform 0.3s ease;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: rgba(21, 10, 33, 0.98);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 0.5rem 0;
+    margin: 0;
+    list-style: none;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.custom-dropdown.open .dropdown-options {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-option {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.dropdown-option:hover {
+    background: rgba(168, 85, 247, 0.15);
     color: var(--text-light);
+    padding-left: 1.8rem;
+}
+
+.dropdown-option.selected {
+    background: rgba(168, 85, 247, 0.3);
+    color: var(--text-light);
+    font-weight: 600;
 }
 
 .hidden {
@@ -415,11 +480,12 @@ body {
 }
 
 .rank {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 800;
     color: var(--primary-dark);
-    width: 40px;
+    min-width: 95px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .game-item:nth-child(1) .rank {
@@ -526,5 +592,85 @@ body {
         margin-top: 0.5rem;
         padding-top: 1rem;
         border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+}
+
+/* Platform Badges Container */
+.platform-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Platform Badge Base Style */
+.platform-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-main);
+    user-select: none;
+    transition: all 0.3s ease;
+}
+
+.platform-badge i {
+    font-size: 0.85rem;
+}
+
+/* Theme Colors for Platforms */
+.platform-badge.steam {
+    border-color: rgba(102, 192, 244, 0.3);
+    color: #66c0f4;
+    background: rgba(102, 192, 244, 0.05);
+}
+
+.platform-badge.steam:hover {
+    background: rgba(102, 192, 244, 0.15);
+    box-shadow: 0 0 10px rgba(102, 192, 244, 0.2);
+}
+
+.platform-badge.epic {
+    border-color: rgba(0, 120, 242, 0.3);
+    color: #0078f2;
+    background: rgba(0, 120, 242, 0.05);
+}
+
+.platform-badge.epic:hover {
+    background: rgba(0, 120, 242, 0.15);
+    box-shadow: 0 0 10px rgba(0, 120, 242, 0.2);
+}
+
+.platform-badge.gamepass {
+    border-color: rgba(16, 124, 16, 0.3);
+    color: #107c10;
+    background: rgba(16, 124, 16, 0.05);
+}
+
+.platform-badge.gamepass:hover {
+    background: rgba(16, 124, 16, 0.15);
+    box-shadow: 0 0 10px rgba(16, 124, 16, 0.2);
+}
+
+.platform-badge.custom {
+    border-color: rgba(168, 85, 247, 0.3);
+    color: #c084fc;
+    background: rgba(168, 85, 247, 0.05);
+}
+
+.platform-badge.custom:hover {
+    background: rgba(168, 85, 247, 0.15);
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+}
+
+/* Make badges align nicely in mobile grid */
+@media (max-width: 600px) {
+    .platform-badges {
+        justify-content: center;
     }
 }
