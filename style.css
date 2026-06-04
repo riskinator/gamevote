@@ -8,6 +8,8 @@
     --text-muted: #c084fc;
     --heart-color: #f43f5e;
     --glass-border: rgba(168, 85, 247, 0.2);
+    --surface: rgba(255, 255, 255, 0.03);
+    --text-light: #ffffff;
 }
 
 * {

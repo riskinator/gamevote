@@ -1,6 +1,7 @@
 // ⚙️ SOCIAL MEDIA KONFIGURATION (Hier deine IDs eintragen!)
 window.YOUTUBE_CHANNEL_ID = "UCBUNenXpADVmqjmT_bEJeEg"; // Deine YouTube Kanal-ID (UC...)
-window.TWITCH_CLIP_SLUG = ""; // Der Name deines Twitch-Clips (aus der Clip-URL)
+window.YOUTUBE_SHORT_ID = ""; // ID deines neuesten Shorts (z.B. dQw4w9WgXcQ) - falls leer, wird ein Platzhalter angezeigt
+window.TWITCH_CLIP_SLUG = ""; // Der Name deines Twitch-Clips (aus der Clip-URL) - falls leer, wird ein Platzhalter angezeigt
 
 // 🎮 Eigene Spiele (Epic Games, Xbox Game Pass, Tarkov etc.) hinzufügen
 //
