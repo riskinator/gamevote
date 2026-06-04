@@ -17,35 +17,29 @@
 
 <body>
     <header class="navbar">
-        <div class="logo-container">
-            <h1 class="css-logo">
-                <span class="riski">Riski</span><span class="tv">TV</span>
-            </h1>
-            <a href="https://www.twitch.tv/RiskiTV" target="_blank" rel="noopener noreferrer" class="stream-status-link">
-                <div id="stream-status" class="stream-status-badge offline">
-                    <span class="status-dot"></span>
-                    <span class="status-text">Stream: OFFLINE</span>
-                </div>
-            </a>
+        <div class="navbar-top">
+            <div class="logo-container">
+                <h1 class="css-logo">
+                    <span class="riski">Riski</span><span class="tv">TV</span>
+                </h1>
+                <a href="https://www.twitch.tv/RiskiTV" target="_blank" rel="noopener noreferrer" class="stream-status-link">
+                    <div id="stream-status" class="stream-status-badge offline">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Stream: OFFLINE</span>
+                    </div>
+                </a>
+            </div>
+            <div class="social-links">
+                <a href="https://www.twitch.tv/RiskiTV" target="_blank" rel="noopener noreferrer" class="social-btn twitch">
+                    <i class="fa-brands fa-twitch"></i>
+                </a>
+                <a href="https://www.youtube.com/@Riskinator" target="_blank" rel="noopener noreferrer"
+                    class="social-btn youtube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+            </div>
         </div>
-        <div class="social-links">
-            <a href="https://www.twitch.tv/RiskiTV" target="_blank" rel="noopener noreferrer" class="social-btn twitch">
-                <i class="fa-brands fa-twitch"></i>
-            </a>
-            <a href="https://www.youtube.com/@Riskinator" target="_blank" rel="noopener noreferrer"
-                class="social-btn youtube">
-                <i class="fa-brands fa-youtube"></i>
-            </a>
-        </div>
-    </header>
-
-    <main class="container">
-        <section class="hero">
-            <h1>Community Game Vote</h1>
-            <p>Welche Games wünscht ihr euch?</p>
-        </section>
-
-        <section class="search-container">
+        <div class="navbar-search">
             <div class="search-wrapper">
                 <i class="fa-solid fa-search search-icon"></i>
                 <input type="text" id="search-input" placeholder="Spiel suchen (z.B. Counter-Strike)..."
@@ -62,7 +56,16 @@
                     <li data-value="za" class="dropdown-option" role="option" aria-selected="false">Alphabetisch (Z-A)</li>
                 </ul>
             </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Community Game Vote</h1>
+            <p>Welche Games wünscht ihr euch?</p>
         </section>
+
+
 
         <section class="game-list-container">
             <div id="loading" class="loading">Loading games...</div>

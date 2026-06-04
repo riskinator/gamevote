@@ -31,15 +31,35 @@ body {
 
 .navbar {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem 2rem;
-    background: rgba(10, 5, 16, 0.8);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.75rem 2rem;
+    gap: 0.6rem;
+    background: rgba(10, 5, 16, 0.85);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--glass-border);
     position: sticky;
     top: 0;
     z-index: 100;
+}
+
+/* Obere Zeile: Logo + Social Links */
+.navbar-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+/* Untere Zeile: Suchleiste + Dropdown */
+.navbar-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: wrap;
 }
 
 .logo-container {
@@ -283,24 +303,17 @@ body {
     color: var(--text-muted);
 }
 
-/* Search Bar & Sort */
-.search-container {
-    margin-bottom: 2.5rem;
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    animation: slideDown 0.8s ease-out 0.2s forwards;
-    opacity: 0;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 10;
-}
-
-.search-wrapper {
+/* Search Bar & Sort (in Navbar) */
+.navbar-search .search-wrapper {
     position: relative;
     width: 100%;
     max-width: 500px;
     flex: 1 1 300px;
+}
+
+/* Alte .search-container für Abwärtskompatibilität */
+.search-container {
+    display: none; /* Versteckt, da Suche jetzt in Navbar */
 }
 
 .search-wrapper .search-icon {
@@ -589,10 +602,7 @@ body {
 /* Mobile Navbar: Vertikal stapeln damit Social-Icons das Badge nicht überdecken */
 @media (max-width: 768px) {
     .navbar {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 1rem;
+        padding: 0.75rem 1rem;
     }
 
     .logo-container {
@@ -604,6 +614,19 @@ body {
     .social-links {
         position: static;
         justify-content: center;
+    }
+
+    .navbar-search {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .navbar-search .search-wrapper {
+        max-width: 100%;
+    }
+
+    .custom-dropdown {
+        width: 100%;
     }
 }
 
