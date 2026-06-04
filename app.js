@@ -127,7 +127,7 @@ async function fetchWithProxy(url) {
 
 // 🎮 Xbox Game Pass PC Spieleliste abrufen & cachen (24 Stunden)
 async function fetchGamePassPCGames() {
-    const CACHE_KEY = 'riski_gamepass_cache';
+    const CACHE_KEY = 'riski_gamepass_cache_v2';
     const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 Stunden in Millisekunden
     
     // 1. Cache prüfen
@@ -176,13 +176,13 @@ async function fetchGamePassPCGames() {
                 detailsData.Products.forEach(prod => {
                     const title = prod.LocalizedProperties?.[0]?.ProductTitle || prod.LocalizedProperties?.[0]?.ShortTitle;
                     
-                    // Bild extrahieren (Store-Logo oder Key-Art)
+                    // Bild extrahieren (Querformat bevorzugt, ansonsten Hochformat-BoxArt)
                     let imageUrl = "";
                     const images = prod.LocalizedProperties?.[0]?.Images;
                     if (images && Array.isArray(images)) {
-                        const boxArt = images.find(img => img.ImagePurpose === "BoxArt" || img.ImagePurpose === "Poster");
-                        const logo = images.find(img => img.ImagePurpose === "SuperHeroArt" || img.ImagePurpose === "TitledHeroImage" || img.ImagePurpose === "StoreLogo");
-                        const selectedImg = boxArt || logo || images[0];
+                        const wideArt = images.find(img => img.ImagePurpose === "SuperHeroArt" || img.ImagePurpose === "TitledHeroImage" || img.ImagePurpose === "WideFeaturedPhoto" || img.ImagePurpose === "WideFeaturedPhotos");
+                        const boxArt = images.find(img => img.ImagePurpose === "BoxArt" || img.ImagePurpose === "Poster" || img.ImagePurpose === "StoreLogo");
+                        const selectedImg = wideArt || boxArt || images[0];
                         if (selectedImg && selectedImg.Uri) {
                             imageUrl = "https:" + selectedImg.Uri;
                         }
@@ -291,27 +291,39 @@ function buildUnifiedGameList(steamGames, epicGames, customGames, gamePassGames)
     }));
 }
 
-// 🖼️ Bild-Optimierung: Verkleinerung und Komprimierung für alle CDN- & externen Bilder
+// 🖼️ Bild-Optimierung: Saliency-basiertes Smart Crop + CDN-Komprimierung für alle Quellen
+//
+// Strategie pro Bildquelle:
+//  • Steam (steamstatic.com)     → bereits 231x87 capsule, perfekt, keine Änderung nötig
+//  • placehold.co                → SVG-Vektor, sofort, keine Änderung nötig
+//  • Microsoft/Xbox (Querformat) → CDN-Parameter ?w=231&q=75 (bereits Querformat, passt gut)
+//  • Microsoft/Xbox (Hochformat) → über weserv.nl fit=attention (logo-orientierter Zuschnitt)
+//  • Alle anderen externen URLs  → über weserv.nl fit=attention (logo-orientierter Zuschnitt)
+//
+// "fit=attention" nutzt einen Saliency-Algorithmus: Er erkennt automatisch Bereiche mit
+// hohem Kontrast und klaren Kanten (= Logos & Titel) und wählt diesen als Ausschnitt.
+// Das ist die beste praktikable Lösung ohne eine kostenpflichtige OCR/KI-API.
 function optimizeImageUrl(url) {
     if (!url) return 'https://placehold.co/231x87/150a21/a855f7?text=No+Image';
     
-    // Steam-Bilder sind bereits ab Werk optimal komprimiert (231x87 capsule, ca. 10KB)
-    // placehold.co sind reine Text-Vektorbilder, die sofort laden
+    // Steam: bereits 231x87 capsule format, ~10KB, ideal
+    // placehold.co: reiner SVG-Vektor, instant
     if (url.includes('steamstatic.com') || url.includes('placehold.co')) {
         return url;
     }
     
-    // Microsoft / Xbox Live CDN Optimierung: Auf 231px Breite skalieren und Qualität komprimieren
+    // Microsoft / Xbox CDN: wir leiten ALLE Xbox-Bilder jetzt durch weserv.nl
+    // damit auch BoxArt/Poster-Bilder (Hochformat) sauber auf den Titelbereich zugeschnitten werden.
     if (url.includes('store-images.s-microsoft.com') || url.includes('xboxlive.com')) {
-        const cleanUrl = url.split('?')[0]; // Eventuell bestehende Parameter entfernen
-        return `${cleanUrl}?w=231&q=75`;
+        const cleanUrl = url.split('?')[0].replace(/^https?:\/\//i, '');
+        return `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&w=231&h=87&fit=attention&q=80`;
     }
     
-    // Für alle anderen externen Bilder (z.B. aus custom_games.js wie das 1280x720 Tarkov-Bild)
-    // nutzen wir den bewährten, schnellen Image-Proxy weserv.nl, um sie auf 231x87px zu komprimieren.
+    // Alle anderen externen Bilder (custom_games.js, etc.)
+    // fit=attention → saliency-basierter Zuschnitt (Logo/Titelbereich wird bevorzugt)
     try {
         const cleanUrl = url.replace(/^https?:\/\//i, '');
-        return `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&w=231&h=87&fit=cover&q=75`;
+        return `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&w=231&h=87&fit=attention&q=80`;
     } catch (e) {
         console.warn("Fehler bei weserv.nl Bild-Optimierung, verwende Original-URL:", e);
         return url;
@@ -429,41 +441,25 @@ window.toggleVote = function(gameId) {
     });
 };
 
+// Twitch Status-Check (Lightweight API Abfrage ohne Iframe-Fehler)
+async function checkTwitchStatus() {
+    try {
+        const response = await fetch('https://decapi.me/twitch/uptime/RiskiTV?offline_msg=offline');
+        if (response.ok) {
+            const text = await response.text();
+            const isLive = text.trim().toLowerCase() !== 'offline';
+            updateStreamStatus(isLive);
+        }
+    } catch (e) {
+        console.warn("Fehler beim Abrufen des Twitch-Status:", e);
+    }
+}
+
 // Twitch Status-Check initialisieren
 function initTwitchStatusCheck() {
-    const hostname = window.location.hostname || "localhost";
-
-    // Ein unsichtbares Div für den Twitch-Player erstellen, um dessen Status-Events zu nutzen
-    const hiddenDiv = document.createElement('div');
-    hiddenDiv.id = 'hidden-twitch-player';
-    hiddenDiv.style.position = 'absolute';
-    hiddenDiv.style.width = '1px';
-    hiddenDiv.style.height = '1px';
-    hiddenDiv.style.opacity = '0.01';
-    hiddenDiv.style.left = '-9999px';
-    hiddenDiv.style.pointerEvents = 'none';
-    document.body.appendChild(hiddenDiv);
-
-    if (typeof Twitch !== 'undefined' && Twitch.Player) {
-        // Twitch Player initialisieren (unsichtbar)
-        const player = new Twitch.Player("hidden-twitch-player", {
-            width: "100%",
-            height: "100%",
-            channel: "RiskiTV",
-            parent: [hostname],
-            muted: true,
-            autoplay: false
-        });
-
-        // Event-Listeners für Online/Offline Status des Streamers
-        player.addEventListener(Twitch.Player.ONLINE, () => {
-            updateStreamStatus(true);
-        });
-
-        player.addEventListener(Twitch.Player.OFFLINE, () => {
-            updateStreamStatus(false);
-        });
-    }
+    checkTwitchStatus();
+    // Alle 3 Minuten aktualisieren
+    setInterval(checkTwitchStatus, 3 * 60 * 1000);
 }
 
 // Stream-Status-Anzeige in der Navbar aktualisieren
